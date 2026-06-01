@@ -98,7 +98,7 @@ Proof of Concept — not production-ready. Built to demonstrate the concept and 
 
 ## License
 
-Source available for review. Contact for usage terms.
+MIT License — see [LICENSE](LICENSE) for details.
 
 ## Contact
 

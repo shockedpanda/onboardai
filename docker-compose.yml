@@ -1,0 +1,49 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  processor:
+    build: ./processor
+    container_name: compliance_processor
+    volumes:
+      - ./incoming:/app/incoming
+      - ./processed:/app/processed
+      - ./archive:/app/archive 
+      - ./compliance_rules.json:/app/compliance_rules.json
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - WATCH_DIR=/app/incoming
+      - OUTPUT_DIR=/app/processed
+      - ARCHIVE_DIR=/app/archive
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    command: python watch_and_process.py
+  
+  screening:
+    build: ./screening
+    container_name: sanctions_screening
+    volumes:
+      - ./screening_data/openpeps.csv:/app/data/openpeps.csv:ro  # OpenSanctions PEP list
+      - screening_data:/app/data                                 # for SQLite database
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  screening_data:

@@ -1,0 +1,9 @@
+﻿APPLICANT REGISTRATION DETAILS
+Name: Jane Emily Smith
+Date of Birth: 14/07/1982
+Nationality: Canadian
+Passport No: AB123456
+Residential Address: 45 Elm Street, Toronto, ON M5A 1B2, Canada
+Source of Funds: Salary from employment
+Source of Wealth: Accumulated savings and investment gains over 15 years; Senior Software Engineer at MapleTech Solutions Inc.
+PEP Declaration: No

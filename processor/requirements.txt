@@ -1,0 +1,7 @@
+watchdog
+requests
+pytesseract
+pdf2image
+Pillow
+pdfplumber
+python-docx

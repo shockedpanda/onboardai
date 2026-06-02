@@ -505,19 +505,32 @@ class ClientFolderHandler(FileSystemEventHandler):
 
 if __name__ == "__main__":
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(ARCHIVE_DIR, exist_ok=True)
     
-    for item in os.listdir(WATCH_DIR):
-        if os.path.isdir(os.path.join(WATCH_DIR, item)):
-            process_client(item)
+    processed_folders = set()
     
+    def scan_and_process():
+        for item in os.listdir(WATCH_DIR):
+            item_path = os.path.join(WATCH_DIR, item)
+            if os.path.isdir(item_path) and item not in processed_folders:
+                process_client(item)
+                processed_folders.add(item)
+    
+    # Initial scan
+    scan_and_process()
+    
+    # Start watcher for real-time detection
     event_handler = ClientFolderHandler()
     observer = Observer()
     observer.schedule(event_handler, WATCH_DIR, recursive=False)
     observer.start()
     print(f"Watching {WATCH_DIR} for new client folders...")
+    print("(Auto-scans every 30 seconds as fallback)")
+    
     try:
         while True:
-            time.sleep(1)
+            time.sleep(30)
+            scan_and_process()
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
